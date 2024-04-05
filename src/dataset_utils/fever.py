@@ -1,5 +1,5 @@
 from datasets import load_dataset
-from dataset_utils.abstract_dataset import AbstractDataset
+from abstract_dataset import AbstractDataset
 
 
 class FEVER(AbstractDataset):
