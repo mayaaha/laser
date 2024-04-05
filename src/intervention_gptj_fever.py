@@ -128,6 +128,10 @@ class GPTJExperiment:
                 top_5_acc = float(answer.lower().strip() in [token.lower().strip() for token in top_k_tokens[:5]])
                 top_10_acc = float(answer.lower().strip() in [token.lower().strip() for token in top_k_tokens[:10]])
 
+                # Print results to file 
+                file1 = open("fever_results.txt", "a")
+                file1.write(f"{int(is_correct == True)}\t{question}\t{answer}\t{true_logprob}\t{false_logprob}\t{[token.lower().strip() for token in top_k_tokens[:5]]}\n")
+
                 # Compute log-prob of question and answer
                 selected_log_prob = log_prob[:-1, :]  # question - 1 x vocab
                 indices = inputs.input_ids[0, 1:].unsqueeze(1)  # question - 1 x 1
