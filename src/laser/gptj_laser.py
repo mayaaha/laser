@@ -2,7 +2,7 @@ import torch
 
 from copy import deepcopy
 from laser.abstract_laser import AbstractLaser
-from laser.matrix_utils import do_low_rank, sorted_mat, prune
+from laser.matrix_utils import do_low_rank,do_high_rank, sorted_mat, prune
 
 
 class GPTJLaser(AbstractLaser):
@@ -121,7 +121,8 @@ class GPTJLaser(AbstractLaser):
             elif intervention == 'rank-reduction':
                 # Do rank reduction
                 mat_analysis_tensor = deepcopy(param)
-                mat_analysis = do_low_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
+                #mat_analysis = do_low_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
+                mat_analysis = do_high_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
 
             elif intervention == 'zero':
                 mat_analysis_tensor = deepcopy(param)

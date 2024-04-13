@@ -57,3 +57,37 @@ def do_low_rank(weight, k, debug=False, niter=2):
     weight_approx = torch.nn.Parameter(weight_approx)
 
     return weight_approx
+
+def do_high_rank(weight, k, debug=False):
+    assert weight.ndim == 2
+
+    # Perform full SVD
+    U, S, V = torch.svd(weight)
+
+    # Determine the total number of singular values
+    total_singular_values = S.shape[0]
+    
+    # Calculate the number of smallest singular values to keep
+    desired_rank = int(total_singular_values * k)
+
+    if debug:
+        print(f"Shape is {weight.shape}, Data type is {weight.dtype}, Total singular values {total_singular_values}, Desired rank {desired_rank}")
+
+    # Keep only the 'k' smallest singular values and corresponding vectors
+    U_small = U[:, -desired_rank:]
+    S_small = S[-desired_rank:]
+    V_small = V[:, -desired_rank:]
+
+    # Reconstruct the matrix using these smallest components
+    weight_approx = U_small @ torch.diag(S_small) @ V_small.T
+
+    if debug:
+        print(f"New matrix has shape {weight_approx.shape}")
+
+    # Check that the reconstruction is the same shape as the input
+    assert weight_approx.shape[0] == weight.shape[0] and weight_approx.shape[1] == weight.shape[1]
+    
+    # Wrap the approximated weight matrix as a torch.nn.Parameter if needed for training
+    weight_approx = torch.nn.Parameter(weight_approx)
+
+    return weight_approx
