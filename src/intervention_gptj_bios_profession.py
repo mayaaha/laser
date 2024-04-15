@@ -104,6 +104,7 @@ class GPTJExperiment:
                 is_correct = choices_logprob.argmax() == answer_ix
                 answer_log_prob = choices_logprob[answer_ix]
                 answer = choice_tokens[answer_ix]
+                answer_pred = choice_tokens[choices_logprob.argmax()]
 
                 sorted_logprob, sorted_indices = torch.sort(last_token_logprob, descending=True)
 
@@ -120,7 +121,7 @@ class GPTJExperiment:
 
                 tokens_str = ",".join([token.lower().strip() for token in top_k_tokens[:5]])
                 with open("bios_results.txt", "a") as file1:
-                    file1.write(f"{int(is_correct == True)}\t{question}\t{answer}\t{tokens_str}\n")
+                    file1.write(f"{int(is_correct == True)}\t{answer_pred}\t{answer}\t{tokens_str}\t{question}\n")
 
                 # Compute log-prob of question and answer
                 selected_log_prob = log_prob[:-1, :]  # question - 1 x vocab
