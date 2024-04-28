@@ -123,7 +123,7 @@ class GPTJExperiment:
 
             prepared_question, prepared_answer = self.metrics._prepare(generation = generation, answer=answer)
             with open("bbh_qa_results.txt", "a") as file1:
-                    file1.write(f"{int(is_correct == True)}\t{generation}\t{answer}\t{prepared_answer}\t{prepared_question}\t{prompt}\t{inputs}\t{input_and_answer}\n")
+                    file1.write(f"{int(is_correct == True)}\t{generation}\t{answer}\t{prepared_answer}\t{prepared_question}\t{prompt}\n")
 
             self.dataset_metric.accept(is_correct=is_correct,
                                        f1pr_score=f1pr_score,
