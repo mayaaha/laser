@@ -111,6 +111,9 @@ class GPTJExperiment:
             self.dataset_metric.accept(is_correct=is_correct,
                                        f1pr_score=f1pr_score,
                                        log_prob_results=log_prob_results)
+            prepared_question, prepared_answer = self.metrics._prepare(generation = generation, answer=answer)
+            with open("hotpot_results.txt", "a") as file1:
+                    file1.write(f"{int(is_correct == True)}\t{generation}\t{answer}\t{prepared_answer}\t{prepared_question}\t{question}\t{prompted_question}\n")
 
             if i % 10 == 0:
                 print(f"Question: {prompted_question} and gold answer {answer}")
