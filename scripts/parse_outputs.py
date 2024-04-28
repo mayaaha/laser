@@ -75,6 +75,8 @@ if(sys.argv[1] == "fever"):
     before_laser_tokens = 0
     with_laser_tokens = 0
     higher_laser_tokens = 0
+    before_higher_same = 0
+    higher_laser_incorrect1 = 0
     for key in before_laser_dict:
         if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
             output.write(f"No LASER: {before_laser_dict[key][4][0]}\t\tLASER: {with_laser_dict[key][4][0]}\t\tHigher Order LASER: {higher_laser_dict[key][4][0]}\t\tQuestion: {key}\t\tTrue Ans: {with_laser_dict[key][1]}\t\tTokens before: {before_laser_dict[key][4]}\t\tTokens after: {with_laser_dict[key][4]}\t\tTokens high: {higher_laser_dict[key][4]}\n")
@@ -82,6 +84,10 @@ if(sys.argv[1] == "fever"):
                 false_count += 1
             else:
                 true_count += 1
+            if before_laser_dict[key][4][0] == higher_laser_dict[key][4][0]:
+                before_higher_same +=1
+            if higher_laser_dict[key][0] == '0':
+                higher_laser_incorrect1 += 1
         if before_laser_dict[key][0] == '0':
             before_laser_incorrect += 1
         if with_laser_dict[key][0] == '0':
@@ -106,6 +112,8 @@ if(sys.argv[1] == "fever"):
     print(f"Before laser tokens that are not true/false: {before_laser_tokens}")
     print(f"With laser tokens that are not true/false: {with_laser_tokens}")
     print(f"Higher laser tokens that are not true/false: {higher_laser_tokens}")
+    print(f"Before and higher laser same incorrect ans: {before_higher_same}")
+    print(f"Higher laser incorrect just for these samples: {higher_laser_incorrect1}")
     
 if sys.argv[1] == 'bios':
     output = open("bios_results.txt", "w")
@@ -139,15 +147,34 @@ if sys.argv[1] == 'bios':
     before_laser_incorrect = 0
     with_laser_incorrect = 0
     higher_laser_incorrect = 0
+    before_higher_same = 0
+    higher_laser_incorrect1 = 0
+    higher_professor = 0
+    total = 0
+    teacher = 0
     for key in before_laser_dict:
         if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
-            output.write(f"No LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tQuestion: {key}\t\tTrue Ans: {with_laser_dict[key][2]}\n")
+            output.write(f"No LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tQuestion: {key}\n")
+            if before_laser_dict[key][1] == higher_laser_dict[key][1]:
+                before_higher_same +=1
+            if higher_laser_dict[key][0] == '0':
+                higher_laser_incorrect1 += 1           
+            if with_laser_dict[key][1] == 'professor' and before_laser_dict[key][1] == 'teacher':
+                teacher += 1
+                if higher_laser_dict[key][1] == 'teacher':
+                    higher_professor += 1
         if before_laser_dict[key][0] == '0':
             before_laser_incorrect += 1
         if with_laser_dict[key][0] == '0':
             with_laser_incorrect+=1
         if higher_laser_dict[key][0] == '0':
             higher_laser_incorrect+=1
+
     print(f"Before laser incorrect: {before_laser_incorrect}")
     print(f"With laser incorrect: {with_laser_incorrect}")
     print(f"Higher laser incorrect: {higher_laser_incorrect}")
+    print(f"Before and higher laser same incorrect ans: {before_higher_same}")
+    print(f"Higher laser incorrect just for these samples: {higher_laser_incorrect1}")
+    print(f"Number of higher order predictions that were professor: {higher_professor}")
+    print(f"Total: {total}")
+    print(f"With laser teacher: {teacher}")
