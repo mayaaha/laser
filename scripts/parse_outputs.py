@@ -113,32 +113,35 @@ if sys.argv[1] == 'bios':
         for line in b:
             temp = (line.rstrip('\n')).split('\t')
             is_correct = temp[0]
-            question = temp[1]
+            pred_answer = temp[1]
             true_answer = temp[2]
             tokens_str = temp[3]
-            before_laser_dict[question] = [is_correct, true_answer, tokens_str]
+            question = temp[4]
+            before_laser_dict[question] = [is_correct, pred_answer, true_answer, tokens_str]
     with open("bios_output2.txt") as w:
         for line in w:
             temp = (line.rstrip('\n')).split('\t')
             is_correct = temp[0]
-            question = temp[1]
+            pred_answer = temp[1]
             true_answer = temp[2]
             tokens_str = temp[3]
-            with_laser_dict[question] = [is_correct, true_answer, tokens_str] 
+            question = temp[4]
+            with_laser_dict[question] = [is_correct, pred_answer, true_answer, tokens_str] 
     with open("bios_output3.txt") as h:
         for line in h:
             temp = (line.rstrip('\n')).split('\t')
             is_correct = temp[0]
-            question = temp[1]
+            pred_answer = temp[1]
             true_answer = temp[2]
             tokens_str = temp[3]
-            higher_laser_dict[question] = [is_correct, true_answer, tokens_str]   
+            question = temp[4]
+            higher_laser_dict[question] = [is_correct, pred_answer, true_answer, tokens_str]   
     before_laser_incorrect = 0
     with_laser_incorrect = 0
     higher_laser_incorrect = 0
     for key in before_laser_dict:
         if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
-            output.write(f"No LASER: {before_laser_dict[key][4]}\t\tLASER: {with_laser_dict[key][4]}\t\tHigher Order LASER: {higher_laser_dict[key][4]}\t\tQuestion: {key}\t\tTrue Ans: {with_laser_dict[key][1]}\n")
+            output.write(f"No LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tQuestion: {key}\t\tTrue Ans: {with_laser_dict[key][2]}\n")
         if before_laser_dict[key][0] == '0':
             before_laser_incorrect += 1
         if with_laser_dict[key][0] == '0':
