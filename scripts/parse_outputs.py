@@ -178,3 +178,33 @@ if sys.argv[1] == 'bios':
     print(f"Number of higher order predictions that were professor: {higher_professor}")
     print(f"Total: {total}")
     print(f"With laser teacher: {teacher}")
+
+if sys.argv[1] == 'bbh':
+    output = open("bbh_qa_results.txt", "w")
+    with open("bbh_qa_output1.txt") as b:
+        for line in b:
+            temp = (line.rstrip('\n')).split('\t')
+            is_correct = temp[0]
+            generation = temp[1]
+            true_answer = temp[2]
+            prompt = temp[5]
+            before_laser_dict[prompt] = [is_correct, generation, true_answer]
+    with open("bbh_qa_output2.txt") as w:
+        for line in w:
+            temp = (line.rstrip('\n')).split('\t')
+            is_correct = temp[0]
+            generation = temp[1]
+            true_answer = temp[2]
+            prompt = temp[5]
+            before_laser_dict[prompt] = [is_correct, generation, true_answer]
+    with open("bbh_qa_output3.txt") as h:
+        for line in h:
+            temp = (line.rstrip('\n')).split('\t')
+            is_correct = temp[0]
+            generation = temp[1]
+            true_answer = temp[2]
+            prompt = temp[5]
+            before_laser_dict[prompt] = [is_correct, generation, true_answer]
+    for key in before_laser_dict:
+        if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
+            output.write(f"No LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tPrompt: {key}\t\True Answer: {with_laser_dict[key][2]}\n")
