@@ -121,8 +121,8 @@ class GPTJLaser(AbstractLaser):
             elif intervention == 'rank-reduction':
                 # Do rank reduction
                 mat_analysis_tensor = deepcopy(param)
-                mat_analysis = do_low_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
-                #mat_analysis = do_high_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
+                #mat_analysis = do_low_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
+                mat_analysis = do_high_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
 
             elif intervention == 'zero':
                 mat_analysis_tensor = deepcopy(param)
