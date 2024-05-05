@@ -181,14 +181,18 @@ if sys.argv[1] == 'bios':
 
 if sys.argv[1] == 'bbh':
     output = open("bbh_qa_results.txt", "w")
-    records = []  # List to store the records
     current_record = ""  # String to accumulate current record's content
 
     with open("bbh_qa_output1.txt") as b:
         for line in b:
             if line.startswith(('0', '1')):  # Check if the line starts with '0' or '1'
                 if current_record:  # Check if there is an existing record being built
-                    records.append(current_record)  # Add the finished record to the list
+                    temp = current_record.split('\t')
+                    is_correct = temp[0]
+                    true_answer = temp[1]
+                    generation = temp[2]
+                    prompt = temp[3]
+                    before_laser_dict[prompt] = [is_correct, generation, true_answer]
                     current_record = line.strip()  # Start a new record
                 else:
                     current_record = line.strip()  # Start the first record
@@ -197,10 +201,7 @@ if sys.argv[1] == 'bbh':
 
         # Don't forget to add the last record if file doesn't end with a new record
         if current_record:
-            records.append(current_record)
-        for line in b:
-            temp = (line.rstrip('\n')).split('\t')
-            print(temp)
+            temp = current_record.split('\t')
             is_correct = temp[0]
             true_answer = temp[1]
             generation = temp[2]
@@ -208,20 +209,53 @@ if sys.argv[1] == 'bbh':
             before_laser_dict[prompt] = [is_correct, generation, true_answer]
     with open("bbh_qa_output2.txt") as w:
         for line in w:
-            temp = (line.rstrip('\n')).split('\t')
+            if line.startswith(('0', '1')):  # Check if the line starts with '0' or '1'
+                if current_record:  # Check if there is an existing record being built
+                    temp = current_record.split('\t')
+                    is_correct = temp[0]
+                    true_answer = temp[1]
+                    generation = temp[2]
+                    prompt = temp[3]
+                    with_laser_dict[prompt] = [is_correct, generation, true_answer]
+                    current_record = line.strip()  # Start a new record
+                else:
+                    current_record = line.strip()  # Start the first record
+            else:
+                current_record += " " + line.strip()  # Continue accumulating lines for the current record
+
+        # Don't forget to add the last record if file doesn't end with a new record
+        if current_record:
+            temp = current_record.split('\t')
             is_correct = temp[0]
             true_answer = temp[1]
             generation = temp[2]
             prompt = temp[3]
-            before_laser_dict[prompt] = [is_correct, generation, true_answer]
+            with_laser_dict[prompt] = [is_correct, generation, true_answer]
     with open("bbh_qa_output3.txt") as h:
         for line in h:
-            temp = (line.rstrip('\n')).split('\t')
+            if line.startswith(('0', '1')):  # Check if the line starts with '0' or '1'
+                if current_record:  # Check if there is an existing record being built
+                    temp = current_record.split('\t')
+                    is_correct = temp[0]
+                    true_answer = temp[1]
+                    generation = temp[2]
+                    prompt = temp[3]
+                    higher_laser_dict[prompt] = [is_correct, generation, true_answer]
+                    current_record = line.strip()  # Start a new record
+                else:
+                    current_record = line.strip()  # Start the first record
+            else:
+                current_record += " " + line.strip()  # Continue accumulating lines for the current record
+
+        # Don't forget to add the last record if file doesn't end with a new record
+        if current_record:
+            temp = current_record.split('\t')
             is_correct = temp[0]
             true_answer = temp[1]
             generation = temp[2]
             prompt = temp[3]
-            before_laser_dict[prompt] = [is_correct, generation, true_answer]
+            higher_laser_dict[prompt] = [is_correct, generation, true_answer]
+            print(higher_laser_dict[prompt])
     for key in before_laser_dict:
         if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
             output.write(f"Prompt: {key}\t\tNo LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tTrue Answer: {with_laser_dict[key][2]}\n")
