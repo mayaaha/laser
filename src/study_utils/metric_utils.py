@@ -109,6 +109,23 @@ class DatasetMetrics:
         self.logger.log(f"{prefix} 0-1 Correctness is {results[DatasetMetrics.CORRECTNESS]} percentage, "
                         f"Mean F1 score is {results[DatasetMetrics.AvgF1Score]}, "
                         f"Mean Log Prob is {results[DatasetMetrics.MeanLogProb]}{top_k_results}")
+    def print_to_file(self):
+        results = self.agg_to_dict()
+
+        prefix = f"Final Performance: Dataset size {self.num_examples}" \
+            if self._terminate else f"After {self.num_examples}"
+
+        if len(self.total_top_k_acc) == 0:
+            top_k_results = "."
+        else:
+            top_k_results = ", ".join([f"{k} is {v}" for k, v in sorted(results.items())
+                                       if k.startswith(DatasetMetrics.TOPK)])
+            top_k_results = ", " + top_k_results + "."
+
+        with open("metric_comparison.txt", "a") as file1:
+            file1.write(f"{prefix} 0-1 Correctness is {results[DatasetMetrics.CORRECTNESS]} percentage, "
+                        f"Mean F1 score is {results[DatasetMetrics.AvgF1Score]}, "
+                        f"Mean Log Prob is {results[DatasetMetrics.MeanLogProb]}{top_k_results}")
 
     def agg_to_dict(self):
 

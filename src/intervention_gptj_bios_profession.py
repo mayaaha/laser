@@ -180,6 +180,8 @@ class GPTJExperiment:
         self.logger.log("Saving results. Final Performance is given below:")
         self.dataset_metric.terminate()
         self.dataset_metric.print()
+        self.dataset_metric.print_to_file()
+        
 
         time_start = time.time()
         # Save predictions

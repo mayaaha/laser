@@ -156,6 +156,7 @@ class GPTJExperiment:
         self.logger.log("Saving results. Final Performance is given below:")
         self.dataset_metric.terminate()
         self.dataset_metric.print()
+        self.dataset_metric.print_to_file()
 
         time_start = time.time()
         # Save predictions
@@ -276,6 +277,9 @@ if __name__ == '__main__':
     logger.log(f"{llm_name}, Lnum {args.lnum}, Lname {args.lname}, Rate {args.rate} => "
                f"Model results {results.to_str()}.")
     logger.log("Experimented Completed.")
+    with open("metric_comparison.txt", "a") as file1:
+        file1.write(f"{llm_name}, Lnum {args.lnum}, Lname {args.lname}, Rate {args.rate} => "
+               f"Model results {results.to_str()}.")
 
     summary = results.to_dict()
     for k, v in vars(args).items():
