@@ -184,27 +184,28 @@ if sys.argv[1] == 'bbh':
     with open("bbh_qa_output1.txt") as b:
         for line in b:
             temp = (line.rstrip('\n')).split('\t')
+            print(temp)
             is_correct = temp[0]
-            generation = temp[1]
-            true_answer = temp[2]
-            prompt = temp[5]
+            true_answer = temp[1]
+            generation = temp[2]
+            prompt = temp[3]
             before_laser_dict[prompt] = [is_correct, generation, true_answer]
     with open("bbh_qa_output2.txt") as w:
         for line in w:
             temp = (line.rstrip('\n')).split('\t')
             is_correct = temp[0]
-            generation = temp[1]
-            true_answer = temp[2]
-            prompt = temp[5]
+            true_answer = temp[1]
+            generation = temp[2]
+            prompt = temp[3]
             before_laser_dict[prompt] = [is_correct, generation, true_answer]
     with open("bbh_qa_output3.txt") as h:
         for line in h:
             temp = (line.rstrip('\n')).split('\t')
             is_correct = temp[0]
-            generation = temp[1]
-            true_answer = temp[2]
-            prompt = temp[5]
+            true_answer = temp[1]
+            generation = temp[2]
+            prompt = temp[3]
             before_laser_dict[prompt] = [is_correct, generation, true_answer]
     for key in before_laser_dict:
         if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
-            output.write(f"No LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tPrompt: {key}\t\True Answer: {with_laser_dict[key][2]}\n")
+            output.write(f"Prompt: {key}\t\tNo LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tTrue Answer: {with_laser_dict[key][2]}\n")
