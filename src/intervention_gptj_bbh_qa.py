@@ -277,9 +277,6 @@ if __name__ == '__main__':
     logger.log(f"{llm_name}, Lnum {args.lnum}, Lname {args.lname}, Rate {args.rate} => "
                f"Model results {results.to_str()}.")
     logger.log("Experimented Completed.")
-    with open("metric_comparison.txt", "a") as file1:
-        file1.write(f"{llm_name}, Lnum {args.lnum}, Lname {args.lname}, Rate {args.rate} => "
-               f"Model results {results.to_str()}.")
 
     summary = results.to_dict()
     for k, v in vars(args).items():
