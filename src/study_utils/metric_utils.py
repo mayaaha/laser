@@ -125,7 +125,7 @@ class DatasetMetrics:
         with open("metric_comparison.txt", "a") as file1:
             file1.write(f"{prefix} 0-1 Correctness is {results[DatasetMetrics.CORRECTNESS]} percentage, "
                         f"Mean F1 score is {results[DatasetMetrics.AvgF1Score]}, "
-                        f"Mean Log Prob is {results[DatasetMetrics.MeanLogProb]}{top_k_results}")
+                        f"Mean Log Prob is {results[DatasetMetrics.MeanLogProb]}{top_k_results}\n")
 
     def agg_to_dict(self):
 

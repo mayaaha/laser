@@ -181,7 +181,23 @@ if sys.argv[1] == 'bios':
 
 if sys.argv[1] == 'bbh':
     output = open("bbh_qa_results.txt", "w")
+    records = []  # List to store the records
+    current_record = ""  # String to accumulate current record's content
+
     with open("bbh_qa_output1.txt") as b:
+        for line in b:
+            if line.startswith(('0', '1')):  # Check if the line starts with '0' or '1'
+                if current_record:  # Check if there is an existing record being built
+                    records.append(current_record)  # Add the finished record to the list
+                    current_record = line.strip()  # Start a new record
+                else:
+                    current_record = line.strip()  # Start the first record
+            else:
+                current_record += " " + line.strip()  # Continue accumulating lines for the current record
+
+        # Don't forget to add the last record if file doesn't end with a new record
+        if current_record:
+            records.append(current_record)
         for line in b:
             temp = (line.rstrip('\n')).split('\t')
             print(temp)
