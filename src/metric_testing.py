@@ -1,14 +1,14 @@
 import subprocess
 import sys
 
-params = {"counterfact": ["fc_in", 27, 9.9], 
-          "hotpot": ["fc_in", 27, 9], 
-          "fever": ["fc_in", 24, 9.9], 
-          "bios": ["fc_in", 14, 9.9], 
-          "bios_profession": ["fc_in", 18, 9.9],
-          "bbh": ["fc_in", 26, 9.9],
-          "truthfulqa": ["fc_in", 7, 2],
-          "bbh_qa": ["fc_in", 27, 9]}
+params = {"counterfact": ["fc_in", "27", "9.9"], 
+          "hotpot": ["fc_in", "27", "9"], 
+          "fever": ["fc_in", "24", "9.9"], 
+          "bios": ["fc_in", "14", "9.9"], 
+          "bios_profession": ["fc_in", "18", "9.9"],
+          "bbh": ["fc_in", "26", "9.9"],
+          "truthfulqa": ["fc_in", "7", "2"],
+          "bbh_qa": ["fc_in", "27", "9"]}
 
 file1_params = params[sys.argv[1]]
 file2_params = params[sys.argv[2]]

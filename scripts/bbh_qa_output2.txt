@@ -1,5 +1,4 @@
 1	basketball	the sport played by bam adebayo is basketball. but his game is basketball played by a	The sport played by Bam Adebayo is
-1	basketball	the sport played by bam adebayo is basketball. but his game is basketball played by a	The sport played by Bam Adebayo is
 1	japan	the country of citizenship of matsutarō shōriki is japan. his father was born in japan but his	The country of citizenship of Matsutarō Shōriki is
 0	latin	marcus junius brutus writing languages
 
