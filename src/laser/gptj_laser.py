@@ -117,13 +117,15 @@ class GPTJLaser(AbstractLaser):
 
                 mat_analysis = prune(mat_analysis, mat_sort, rate)  # pruned_mat
                 mat_analysis = torch.from_numpy(mat_analysis)
-
+            elif intervention == 'high-order':
+                # Do rank reduction
+                mat_analysis_tensor = deepcopy(param)
+                mat_analysis = do_high_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
             elif intervention == 'rank-reduction':
                 # Do rank reduction
                 mat_analysis_tensor = deepcopy(param)
                 mat_analysis = do_low_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
                 #mat_analysis = do_high_rank(mat_analysis_tensor.type(torch.float32), (10 - rate) * 0.1)
-
             elif intervention == 'zero':
                 mat_analysis_tensor = deepcopy(param)
                 mat_analysis = 0.0 * mat_analysis_tensor.type(torch.float32)
