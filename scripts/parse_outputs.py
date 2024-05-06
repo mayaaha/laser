@@ -1,4 +1,6 @@
 import sys
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
+import pandas as pd
 before_laser_dict = dict()
 with_laser_dict = dict()
 higher_laser_dict = dict()
@@ -78,7 +80,7 @@ if(sys.argv[1] == "fever"):
     before_higher_same = 0
     higher_laser_incorrect1 = 0
     for key in before_laser_dict:
-        if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
+        if higher_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
             output.write(f"No LASER: {before_laser_dict[key][4][0]}\t\tLASER: {with_laser_dict[key][4][0]}\t\tHigher Order LASER: {higher_laser_dict[key][4][0]}\t\tQuestion: {key}\t\tTrue Ans: {with_laser_dict[key][1]}\t\tTokens before: {before_laser_dict[key][4]}\t\tTokens after: {with_laser_dict[key][4]}\t\tTokens high: {higher_laser_dict[key][4]}\n")
             if higher_laser_dict[key][4][0] == 'f':
                 false_count += 1
@@ -117,6 +119,7 @@ if(sys.argv[1] == "fever"):
     
 if sys.argv[1] == 'bios':
     output = open("bios_results.txt", "w")
+    train = []
     with open("bios_output1.txt") as b:
         for line in b:
             temp = (line.rstrip('\n')).split('\t')
@@ -125,6 +128,7 @@ if sys.argv[1] == 'bios':
             true_answer = temp[2]
             tokens_str = temp[3]
             question = temp[4]
+            #train.append(question)
             before_laser_dict[question] = [is_correct, pred_answer, true_answer, tokens_str]
     with open("bios_output2.txt") as w:
         for line in w:
@@ -144,6 +148,8 @@ if sys.argv[1] == 'bios':
             tokens_str = temp[3]
             question = temp[4]
             higher_laser_dict[question] = [is_correct, pred_answer, true_answer, tokens_str]   
+
+    
     before_laser_incorrect = 0
     with_laser_incorrect = 0
     higher_laser_incorrect = 0
@@ -152,6 +158,8 @@ if sys.argv[1] == 'bios':
     higher_professor = 0
     total = 0
     teacher = 0
+    p = 0
+    counts = {label:0 for label in ['journalist', 'poet', 'composer', 'model', 'teacher', 'architect', 'painter', 'professor']}
     for key in before_laser_dict:
         if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
             output.write(f"No LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tQuestion: {key}\n")
@@ -163,13 +171,34 @@ if sys.argv[1] == 'bios':
                 teacher += 1
                 if higher_laser_dict[key][1] == 'teacher':
                     higher_professor += 1
+            if with_laser_dict[key][1] == 'professor' and before_laser_dict[key][0] == '0':
+                #train.append(key)
+                pass
+        if with_laser_dict[key][0] == '1' and higher_laser_dict[key][0] == '0' and before_laser_dict[key][2] == 'journalist':
+            train.append(key)
+            p+=1
+            pass
+        for label in ['journalist', 'poet', 'composer', 'model', 'teacher', 'architect', 'painter', 'professor']:
+            if with_laser_dict[key][2] == label:
+                counts[label] += 1
+        if with_laser_dict[key][0] == '0' and with_laser_dict[key][2] == 'journalist':
+            #train.append(key)
+            pass
+        if higher_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
+            #train.append(key)
+            pass
         if before_laser_dict[key][0] == '0':
             before_laser_incorrect += 1
         if with_laser_dict[key][0] == '0':
             with_laser_incorrect+=1
         if higher_laser_dict[key][0] == '0':
             higher_laser_incorrect+=1
-
+    tfidfvectorizer = TfidfVectorizer(analyzer='word',stop_words= 'english', max_features=50)
+    tfidf_wm = tfidfvectorizer.fit_transform(train)
+    tfidf_tokens = tfidfvectorizer.get_feature_names_out()
+    df_tfidfvect = pd.DataFrame(data = tfidf_wm.toarray(),columns = tfidf_tokens)
+    df_tfidfvect.to_csv('td_idf.csv', sep='\t', encoding='utf-8')
+    print(tfidf_tokens)
     print(f"Before laser incorrect: {before_laser_incorrect}")
     print(f"With laser incorrect: {with_laser_incorrect}")
     print(f"Higher laser incorrect: {higher_laser_incorrect}")
@@ -178,6 +207,8 @@ if sys.argv[1] == 'bios':
     print(f"Number of higher order predictions that were professor: {higher_professor}")
     print(f"Total: {total}")
     print(f"With laser teacher: {teacher}")
+    print(f"p {p}")
+    print(counts)
 
 if sys.argv[1] == 'bbh':
     output = open("bbh_qa_results.txt", "w")
@@ -256,6 +287,18 @@ if sys.argv[1] == 'bbh':
             prompt = temp[3]
             higher_laser_dict[prompt] = [is_correct, generation, true_answer]
             print(higher_laser_dict[prompt])
+    with_laser_incorrect = 0
+    higher_laser_incorrect = 0
+    before_laser_incorrect = 0
     for key in before_laser_dict:
         if before_laser_dict[key][0] == '0' and with_laser_dict[key][0] == '1':
             output.write(f"Prompt: {key}\t\tNo LASER: {before_laser_dict[key][1]}\t\tLASER: {with_laser_dict[key][1]}\t\tHigher Order LASER: {higher_laser_dict[key][1]}\t\tTrue Answer: {with_laser_dict[key][2]}\n")
+        if with_laser_dict[key][0] == '0':
+            with_laser_incorrect += 1
+        if before_laser_dict[key][0] == '0':
+            before_laser_incorrect += 1
+        if higher_laser_dict[key][0] == '0':
+            higher_laser_incorrect += 1
+    print(higher_laser_incorrect)
+    
+            
